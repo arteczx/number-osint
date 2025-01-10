@@ -6,7 +6,6 @@ import requests
 import json
 import os
 
-# Initialize colorama
 init()
 
 def print_banner():
@@ -71,14 +70,11 @@ def phone_number_info(number, mass_scan=False):
                 animate_loading()
             print("\n")
 
-        # Parse the phone number
         parsed_number = phonenumbers.parse(number)
         
-        # Check if number is valid
         if not phonenumbers.is_valid_number(parsed_number):
             return f"{Fore.RED}[!] Invalid phone number detected: {number}{Style.RESET_ALL}"
             
-        # Get basic info
         location = geocoder.description_for_number(parsed_number, "en")
         service_provider = carrier.name_for_number(parsed_number, "en")
         time_zones = timezone.time_zones_for_number(parsed_number)
@@ -86,11 +82,9 @@ def phone_number_info(number, mass_scan=False):
         national_format = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.NATIONAL)
         country_code = phonenumbers.region_code_for_number(parsed_number)
         number_type = get_number_type(parsed_number)
-        
-        # Get additional country information
+
         country_info = get_additional_info(country_code)
-        
-        # Build detailed result
+
         result = f"""
 {Fore.GREEN}[+] ANALYSIS FOR {international_format}{Style.RESET_ALL}
 {Fore.CYAN}═══════════════════════════════════════════════════════════════
@@ -150,8 +144,7 @@ def mass_scan_from_file(filename):
             print(f"\n{Fore.CYAN}[*] Processing number {i}/{len(numbers)}{Style.RESET_ALL}")
             result = phone_number_info(number, mass_scan=True)
             results.append(result)
-            
-        # Save results to file
+
         output_file = f"osint_results_{int(time.time())}.txt"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write('\n\n'.join(results))
